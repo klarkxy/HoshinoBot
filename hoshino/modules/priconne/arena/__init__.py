@@ -10,9 +10,9 @@ from hoshino.util import FreqLimiter, concat_pic, pic2b64
 from .. import chara
 
 sv_help = '''
-[怎么拆] 接防守队角色名 查询竞技场解法
-[点赞] 接作业id 评价作业
-[点踩] 接作业id 评价作业
+[#jjc] 接防守队角色名 查询竞技场解法
+[#点赞] 接作业id 评价作业
+[#点踩] 接作业id 评价作业
 '''.strip()
 sv = Service('pcr-arena', help_=sv_help, bundle='pcr查询')
 
@@ -20,14 +20,14 @@ from . import arena
 
 lmt = FreqLimiter(5)
 
-aliases = ('怎么拆', '怎么解', '怎么打', '如何拆', '如何解', '如何打', '怎麼拆', '怎麼解', '怎麼打', 'jjc查询', 'jjc查詢')
-aliases_b = tuple('b' + a for a in aliases) + tuple('B' + a for a in aliases)
-aliases_tw = tuple('台' + a for a in aliases)
-aliases_jp = tuple('日' + a for a in aliases)
+aliases = ('jjc', 'JJC')
+aliases_b = tuple('#' + a for a in (aliases + tuple('b' + a for a in aliases) + tuple('B' + a for a in aliases) + tuple('国' + a for a in aliases)))
+aliases_tw = tuple('#' + a for a in tuple('台' + a for a in aliases))
+aliases_jp = tuple('#' + a for a in tuple('日' + a for a in aliases))
 
-@sv.on_prefix(aliases)
-async def arena_query(bot, ev):
-    await _arena_query(bot, ev, region=1)
+# @sv.on_prefix(aliases)
+# async def arena_query(bot, ev):
+#     await _arena_query(bot, ev, region=1)
 
 @sv.on_prefix(aliases_b)
 async def arena_query_b(bot, ev):
@@ -124,12 +124,12 @@ async def _arena_query(bot, ev: CQEvent, region: int):
     sv.logger.debug('Arena result sent!')
 
 
-@sv.on_prefix('点赞')
+@sv.on_prefix('#点赞')
 async def arena_like(bot, ev):
     await _arena_feedback(bot, ev, 1)
 
 
-@sv.on_prefix('点踩')
+@sv.on_prefix('#点踩')
 async def arena_dislike(bot, ev):
     await _arena_feedback(bot, ev, -1)
 
@@ -139,7 +139,7 @@ async def _arena_feedback(bot, ev: CQEvent, action:int):
     action_tip = '赞' if action > 0 else '踩'
     qkey = ev.message.extract_plain_text().strip()
     if not qkey:
-        await bot.finish(ev, f'请发送"点{action_tip}+作业id"，如"点{action_tip}ABCDE"，不分大小写', at_sender=True)
+        await bot.finish(ev, f'请发送"点{action_tip}+作业id"，如"#点{action_tip}ABCDE"，不分大小写', at_sender=True)
     if not rex_qkey.match(qkey):
         await bot.finish(ev, f'您要点{action_tip}的作业id不合法', at_sender=True)
     try:
