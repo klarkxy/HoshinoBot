@@ -32,6 +32,8 @@ from .exception import *
 
 plt.style.use('seaborn-pastel')
 plt.rcParams['font.family'] = ['DejaVuSans', 'Microsoft YaHei', 'SimSun', ]
+# plt.rcParams['font.sans-serif'] = ['KaiTi'] # 指定默认字体
+plt.rcParams['axes.unicode_minus'] = False # 解决保存图像是负号'-'显示为方块的问题
 
 USAGE_ADD_CLAN = '#建会 N公会名 S服务器代号'
 USAGE_ADD_MEMBER = '#入会 昵称 (@qq)'
